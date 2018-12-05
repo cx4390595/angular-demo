@@ -1,0 +1,17 @@
+<input type="text" [(ngModel)]="userName" (keyup)="addData($event)" >
+<button (click)="addData_1()">增加+</button>
+
+<hr>
+<h1>正在进行</h1>
+<ul>
+  <li *ngFor="let item of list ;let key =index"  [hidden]="item.status===1"  >
+    <button (click)="changeData(key)">+</button>{{item.userName}}--- <button (click)="delData(key)">删除-</button>
+  </li>
+</ul>
+<hr>
+<h1>已经完成</h1>
+<ul>
+  <li *ngFor="let item of list ;let key =index"  [hidden]="item.status===0" >
+    <button (click)="changeData(key)">+</button>{{item.userName}}--- <button (click)="delData(key)">删除-</button>
+  </li>
+</ul>

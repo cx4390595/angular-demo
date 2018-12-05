@@ -1,0 +1,47 @@
+<h2>这事一个新闻组件</h2>
+{{title}}
+<br>
+<br>
+{{msg}}
+<br>
+<br>
+{{msg1}}
+<br>
+<br>
+{{username}}
+<!--绑定属性-->
+<div id="{{id}}" >这事一个div调试工具 看一下我的属性</div>
+<div [title]="msg" >鼠标瞄上去看一下</div>
+<div ></div>
+<div ></div>
+<br>
+<br>
+
+<!--绑定后台数据-->
+{{h}}
+<br>
+<br>
+<span [innerHTML]="h"></span>
+
+<!--数据循环-->
+<ul>
+  <li *ngFor="let item of list">
+    {{item}}
+  </li>
+</ul>
+
+<br><br>
+
+<ul>
+  <li *ngFor="let item of list2; let key=index">
+
+    {{item}}---{{key}}
+  </li>
+</ul>
+
+<!--双向数据绑定-->
+<input type="text" [(ngModel)]="search" />
+{{search}}
+<br>
+<br>
+<br>
