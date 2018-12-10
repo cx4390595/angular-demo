@@ -21,7 +21,8 @@ export class NewsComponent implements OnInit {
     var That = this
     var url="http://www.phonegap100.com/appapi.php?a=getPortalList&catid=20&page=1";
     this.http.get(url).subscribe((res)=>{
-      That.list = res.result;
+      // That.list = res.result;
+      console.log(res)
     },(err)=>{
       console.log(err)
     })
@@ -32,8 +33,8 @@ export class NewsComponent implements OnInit {
 // jsonp 必须得在url加回到  &callback=JSONP_CALLBACK
   var url = "http://www.phonegap100.com/appapi.php?a=getPortalList&catid=20&page=1&callback=JSONP_CALLBACK";
   this.http.jsonp(url).subscribe((res) => {
-    That.list = res.result;
-    console.log(That.list)
+    // That.list = res.result;
+    console.log(res)
   })
 }
 

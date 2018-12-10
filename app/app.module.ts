@@ -15,7 +15,9 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { Study01Component } from './components/study01/study01.component';
 import { TodoListComponent } from './components/todo-list/todo-list.component';
-import { NewsComponent } from './components/news/news.component';
+// import { NewsComponent } from './components/news/news.component';
+import { Transfer01Component } from './components/传递/transfer01/transfer01.component';
+import { Transfer02Component } from './components/传递/transfer02/transfer02.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { NewsComponent } from './components/news/news.component';
     HeaderComponent,
     Study01Component,
     TodoListComponent,
-    NewsComponent,
+    // NewsComponent,
+    Transfer01Component,
+    Transfer02Component,
 
   ],
   imports: [

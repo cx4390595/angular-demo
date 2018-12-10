@@ -1,0 +1,13 @@
+这是父组件1  --- {{msg}}
+<br>
+<hr>
+<app-transfer02 [msg]="msg" [run]="run" [getDataFormTransfer02]="getDataFormTransfer02" (toparent)="runParent()" #toChild> </app-transfer02>
+<br>
+<br>
+<br>
+<button (click)="getChildData()">执行子组件的方法通过@ViewChild</button>
+<ul>
+  <li *ngFor="let item of list ">
+    {{item.title}}
+  </li>
+</ul>
