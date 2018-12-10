@@ -227,7 +227,7 @@
 
 - 引入模块------```import { HttpClient,HttpHeaders} from '@angular/common/http';```
 - post设置请求头------ ```private headers= new HttpHeaders({'Content-Type': 'application/json'})```
-- 注入模块get post jsonp都使用它-------```constructor(**private http : HttpClient**) { }```
+- 注入模块get post jsonp都使用它-------```constructor(private http : HttpClient) { }```
 	
 ## 1.GET请求
 	
@@ -273,3 +273,264 @@
 	    })
 	  }
 	}
+
+###父子组件传值
+
+- 父组件 在组件标签上 通过[xxxxx]="xxxxx"来传值给子组件
+
+	<div id=parent>		
+	<app-chilid [msg]="msg" [run]="run" [getDataFormChild]="getDataFormChild"></app-child>
+	</div>	
+
+- 子组件
+	
+	1. 引入Input-----```import { Component, OnInit ,Input} from '@angular/core';```
+	 
+	2. @Input() msg:string;来接收父组件传过来的数据 可以是任意
+
+			@Component({
+			  selector: 'app-transfer02',
+			  templateUrl: './transfer02.component.html',
+			  styleUrls: ['./transfer02.component.scss']
+			})
+			export class Transfer02Component implements OnInit {
+			  @Input() msg:string;/*通过Input 接收父组件传过来的msg*/
+			  @Input() run/*通过Input 接收父组件传过来的run */
+			  @Input() getDataFormChild/*通过Input 接收父组件传过来的函数 */
+			  constructor() {
+			
+			  }
+			  ngOnInit() {
+			  }
+			  sendParents(){
+			  }
+			
+			}
+
+
+###子组件传递父组件 函数传参
+
+- 子组件 ```<button (click)="sendParent()" >点击给父组件传值</button>```
+		
+ 	引入Input-----```import { Component, OnInit ,Input} from '@angular/core';```
+
+		export class child implements Onint{
+		    @Input() getDataFormChild/*通过Input 接收父组件传过来的函数 */ 
+			public chlidVal = "这是子组件的值"
+		}
+		  sendParent(){
+    		this.getDataFormChild(this.childVal)
+  		}
+
+- 父组件
+
+		<div id=parent>		
+			<app-chilid  [getDataFormChild]="getDataFormChild"></app-child>
+		</div>	
+		
+	  	getDataFormTransfer02(childVal){
+    		alert(childData+"parent")
+  		}
+
+
+###EventEmitter&&&@Output() 子组件使用父组件方法
+- 子组件 
+	1. 引入```import { Component, OnInit ,Input,EventEmitter,Output} from '@angular/core';```
+	 
+			<button (click)="requestData()">执行父组件的方法通过@Output</button>
+	
+	2. 实例化，用 EventEmitter 和 output 装饰器配合使用 <string>指定类型变量
+	
+			export class Transfer02Component implements OnInit {
+					@Output() private toParent = new EventEmitter <string>();			
+	 			}
+
+	3. 获取父组件的数据
+		
+				requestData(){
+				  this.toParent.emit ()
+				}	
+
+- 父组件
+	1. 接收子组件的的emit
+	
+			<app-child "(toParent)="parentVal($event)"></app-child> 	
+
+	2.在父组件里面定义一个方法 使用这个值
+
+		  //接收子组件传递过来的数据
+		  parentVal(msg:string){
+		    alert(这事父组件的值);
+		  }
+		}
+
+
+###ViewChild  父组件使用子组件的方法改变子组件的值
+- 方法1
+
+	- 子组件
+		1. 定义一个方法
+		  		run(){
+				this.child.msg;
+				}
+	- 父组件 
+
+		1. 用#给子组件起一个名字 类似于vue的 ref 
+		
+				<app-child #toChild></app-child> 
+
+		2. 在父组件里直接使用子组件的方法
+		
+				<button (click)="toChild.run()">调用子组件的方法</button>	
+
+
+- 方法2
+	- 子组件 
+	
+		1. 定义一个方法 或者数据等
+		
+				export class Transfer02Component implements OnInit {
+					public msg:"any"
+					constructor() {
+						this.msg="这是子组件的方法"			
+  					}
+				}
+			
+				
+				run(){
+					this.child.msg;
+				}
+	
+	- 父组件
+		1. 调用子组件给子组件定义一个名称
+		
+				<app-child #toChild></app-child> 	
+	
+		2. 在父组件里面定义一个方法 使用这个值
+	
+				import { Component, OnInit ,ViewChild} from '@angular/core
+				
+				export class Transfer02Component implements OnInit {
+					@ViewChild('toChild') childData		
+		 		}	
+
+
+				getChildData(){
+					this.childData.run()
+					this.childData.msg = "改变子组件的值"
+				}
+
+
+##路由router
+1. 安装有路由的新项目 ```ng new demoRouter --routing```
+
+2. 新建组件 ```ng g component component/项目名```
+
+3. 配制路由 新建app-routing.module
+	
+		import { NgModule } from '@angular/core';
+		import { Routes, RouterModule } from '@angular/router';
+		import { 项目名 } from './components/home/home.component';
+
+		
+		const routes: Routes = [
+		  {/*设置默认路由*/
+		    path:'',
+		    redirectTo:'/home',
+		    pathMatch:"full",
+		  },
+		  { /*匹配不到路由的时候加载的组件 包含了上面的方法*/
+		    path:"**",
+		    component:项目名,
+		  },
+		  {
+		    path:'项目名',
+		    component:项目名
+		  },
+		];
+		
+		@NgModule({
+		  imports: [RouterModule.forRoot(routes)],
+		  exports: [RouterModule]
+		})
+		export class AppRoutingModule { }
+
+4. 引入模块 app.module
+
+		import { BrowserModule } from '@angular/platform-browser';
+		import { NgModule } from '@angular/core';
+		
+		import { AppRoutingModule } from './app-routing.module';
+		import { AppComponent } from './app.component';
+		import { 项目名 } from './components/home/home.component';
+		
+		@NgModule({
+		  declarations: [
+		    AppComponent,
+		    项目名,
+		  ],
+		  imports: [
+		    BrowserModule,
+		    AppRoutingModule//引入路由模块
+		  ],
+		  providers: [],
+		  bootstrap: [AppComponent]
+		})
+		export class AppModule { }
+
+5. 渲染 routerLinkActive="className" 指定选中路由的class名字
+	
+		<div>
+		  <header>
+		    <ul>
+		      <li><a routerLink="项目名" routerLinkActive="acitve">项目</a></li>
+		      <li><a routerLink="news" routerLinkActive="acitve">新闻</a></li>
+		      <li><a routerLink="user" routerLinkActive="acitve">用户</a></li>
+		    </ul>
+		  </header>
+		</div>		
+		<router-outlet></router-outlet>
+
+###动态路由
+
+1. 渲染 a routerLink="home/：aid" 不同页面的标识 
+	
+		<div>
+		  <header>
+		    <ul>
+		      <li><a routerLink="home/1">页面1</a></li>
+		      <li><a routerLink="home/2">页面2</a></li>
+		      <li><a routerLink="home/2">页面3</a></li>
+		    </ul>
+		  </header>
+		</div>		
+		<router-outlet></router-outlet>
+
+2. 配制路由 app-routing.module ```path:"homeContent/:aid"```来接收动态路由
+
+		const routes: Routes = [
+			{
+				path："homeContent/:aid"，
+				component:homeContet,
+			}
+		]
+
+3. 获取ID 获取哪个页面的aid 就在哪个页面声明 这里是homeContent.component
+	
+		//1.引入ActivatedRoute这个模块
+		import { ActivatedRoute } from '@angular/router';	
+		
+		export class NewscontentComponent implements OnInit {
+		
+		//2.声明route
+		  constructor(private route:ActivatedRoute) {}		
+		  ngOnInit() {
+		    //3.获取动态路由
+		  	console.log(this.route.params)
+		
+		  //4.获取动态路由的传值
+		    this.route.params.subscribe(function(data){
+		      console.log(data.aid);
+		    })
+		  }
+		
